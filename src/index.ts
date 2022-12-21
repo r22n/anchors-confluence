@@ -36,7 +36,7 @@ type State = {
         const { headings, links } = state;
 
         headings.filter(x => !x.id).forEach(x => {
-            const id = x.innerText.trim();
+            const id = trim(x.innerText);
             x.id = id;
             links[id] = x;
         });
@@ -46,7 +46,7 @@ type State = {
         const { links, anchors } = state;
 
         anchors.filter(x => !x.href).forEach(x => {
-            const id = x.innerText;
+            const id = trim(x.innerText);
             const href = `#${id}`;
             const to = links[id];
             if (!to) {
