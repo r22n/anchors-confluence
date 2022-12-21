@@ -1,0 +1,19 @@
+{
+  "name": "anchors-confluence",
+  "version": "1.0.0",
+  "description": "enable anchors which is heading of markdown scroll within page",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/r22n/anchors-confluence.git"
+  },
+  "author": "r22n",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/r22n/anchors-confluence/issues"
+  },
+  "homepage": "https://github.com/r22n/anchors-confluence#readme"
+}
