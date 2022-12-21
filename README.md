@@ -21,6 +21,6 @@ https://docs.adaptavist.com/sr4c/7.1.0/features/macros/built-in-macros/markdown
 
 2. put [html macro](https://confluence.atlassian.com/conf74/html-macro-1003128855.html) 
 
-    - set this macro contents [this](index.js)
+    - set this macro contents [this](dist/index.html)
     - put after your markdown macro
     

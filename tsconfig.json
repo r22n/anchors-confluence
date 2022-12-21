@@ -1,9 +1,11 @@
 {
   "compilerOptions": {
-    "target": "ES2015",
+    "target": "es2019",
     "module": "commonjs",
     "allowJs": true,
-    "rootDirs": ["src"],
+    "rootDirs": [
+      "src"
+    ],
     "outDir": "dist",
   }
 }

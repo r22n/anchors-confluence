@@ -4,7 +4,7 @@
   "description": "enable anchors which is heading of markdown scroll within page",
   "main": "index.js",
   "scripts": {
-    "make": "npx tsc"
+    "make": "npx tsc && node src/html.js"
   },
   "repository": {
     "type": "git",
