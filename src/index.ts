@@ -4,7 +4,9 @@ type State = {
     page: HTMLElement;
     headings: HTMLElement[];
     anchors: HTMLAnchorElement[];
-    links: { [id in string]?: HTMLElement };
+    links: {
+        byid: { [id in string]?: HTMLElement };
+    };
 };
 
 (() => {
@@ -12,12 +14,12 @@ type State = {
 
     const main = () => {
         init();
-        anchor();
+        headings();
         link();
     };
 
     const init = () => {
-        const page = document.getElementById("main-content") ?? document.getElementById("content");
+        const page = doc();
         const anchorss = page.getElementsByTagName("a");
         const headingss = [];
         for (let i = 1, tag = `h${i}`; i < 6; tag = `h${++i}`) {
@@ -28,33 +30,55 @@ type State = {
             page,
             headings: headingss.map(ary).flat(),
             anchors: ary(anchorss),
-            links: {},
+            links: { byid: {}, },
         };
     };
 
-    const anchor = () => {
-        const { headings, links } = state;
+    const headings = () => {
+        const { headings, links: { byid } } = state;
 
         headings.filter(x => !x.id).forEach(x => {
             const id = trim(x.innerText);
             x.id = id;
-            links[id] = x;
+            byid[id] = x;
         });
     };
 
     const link = () => {
-        const { links, anchors } = state;
+        const { anchors } = state;
 
         anchors.filter(x => !x.href).forEach(x => {
-            const id = trim(x.innerText);
-            const href = `#${id}`;
-            const to = links[id];
-            if (!to) {
-                console.warn(`ignore anchor link: heading=${id}`);
+            const ref = href(x);
+            if (!ref) {
+                console.warn(`anchor failed to find heading: href=${ref}`);
                 return;
             }
-            x.href = href;
+            x.href = `#${ref}`;
         });
+    };
+
+    const href = (anchors: HTMLAnchorElement) => {
+        const { links: { byid } } = state;
+        const anchor = trim(anchors.innerText);
+
+        if (byid[anchor]) {
+            return anchor;
+        }
+
+        const sec = section(anchors);
+        if (byid[sec]) {
+            return sec;
+        }
+
+        return void 0;
+    };
+
+    const section = (anchors: HTMLAnchorElement) => {
+        const h = anchors.parentElement.previousElementSibling;
+        if (sections[h.tagName]) {
+            return trim((h as HTMLHeadingElement).innerText);
+        }
+        return void 0;
     };
 
     const ary = <T extends HTMLElement>(x: HTMLCollectionOf<T>) => {
@@ -76,6 +100,21 @@ type State = {
         " ": 1,
         "　": 1,
     };
+
+    const sections = {
+        "h1": 1,
+        "h2": 1,
+        "h3": 1,
+        "h4": 1,
+        "h5": 1,
+        "H1": 1,
+        "H2": 1,
+        "H3": 1,
+        "H4": 1,
+        "H5": 1,
+    };
+
+    const doc = () => document.getElementById("main-content") ?? document.getElementById("content");
 
     main();
 })();
