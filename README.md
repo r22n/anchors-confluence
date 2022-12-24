@@ -25,7 +25,7 @@ https://docs.adaptavist.com/sr4c/7.1.0/features/macros/built-in-macros/markdown
   
       - e.g. 
   
-                <script src="https://cdn.jsdelivr.net/gh/r22n/anchors-confluence@main/dist/index.js"></script>
+                <script src="https://cdn.jsdelivr.net/gh/r22n/anchors-confluence/dist/index.js"></script>
             
     - put after your markdown macro
     
