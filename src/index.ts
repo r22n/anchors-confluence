@@ -6,6 +6,10 @@ type State = {
     anchors: HTMLAnchorElement[];
     links: {
         byid: { [id in string]?: HTMLElement };
+        bykeys: {
+            keys: { [key in string]: number };
+            heading: HTMLElement;
+        }[];
     };
 };
 
@@ -30,17 +34,21 @@ type State = {
             page,
             headings: headingss.map(ary).flat(),
             anchors: ary(anchorss),
-            links: { byid: {}, },
+            links: { byid: {}, bykeys: [] },
         };
     };
 
     const headings = () => {
-        const { headings, links: { byid } } = state;
+        const { headings, links: { byid, bykeys } } = state;
 
         headings.filter(x => !x.id).forEach(x => {
             const id = trim(x.innerText);
             x.id = id;
             byid[id] = x;
+            bykeys.push({
+                keys: Object.fromEntries(words(id).map(x => [x, 1])),
+                heading: x,
+            })
         });
     };
 
@@ -70,15 +78,50 @@ type State = {
             return sec;
         }
 
+        const k = keys(anchors);
+        if (k) {
+            return k;
+        }
+
         return void 0;
     };
 
     const section = (anchors: HTMLAnchorElement) => {
         const h = anchors.parentElement.previousElementSibling;
-        if (sections[h.tagName]) {
+        if (sections[h?.tagName]) {
             return trim((h as HTMLHeadingElement).innerText);
         }
         return void 0;
+    };
+
+    const keys = (anchors: HTMLAnchorElement) => {
+        const { links: { bykeys } } = state;
+        const ws = words(anchors.innerText);
+
+        let max = -1;
+        let id;
+        bykeys.forEach(({ keys, heading }) => {
+            const match = ws.filter(x => keys[x]).length;
+            if (match && max < match) {
+                max = match;
+                id = heading.id;
+            }
+        });
+
+        if (max !== -1) {
+            return id;
+        }
+        return void 0;
+    };
+
+    const words = (texts: string) => {
+        const text = trim(texts);
+        const toks = [" ", "　", "は", "が", "を", "とき", "、", ",", "の", "する"];
+        let result = [text];
+        toks.forEach(tok => {
+            result = result.map(x => x.split(tok)).flat().filter(x => x);
+        });
+        return result;
     };
 
     const ary = <T extends HTMLElement>(x: HTMLCollectionOf<T>) => {
