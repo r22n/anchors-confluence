@@ -16,10 +16,11 @@
             page,
             headings: headingss.map(ary).flat(),
             anchors: ary(anchorss),
-            links: { byid: {}, bykeys: [] },
+            links: { byid: {}, bykeys: [], },
         };
     };
     const headings = () => {
+        var _a, _b, _c;
         const { headings, links: { byid, bykeys } } = state;
         headings.filter(x => !x.id).forEach(x => {
             const id = trim(x.innerText);
@@ -30,6 +31,7 @@
                 heading: x,
             });
         });
+        state.links.appendix = (_c = (_b = (_a = byid["付録"]) !== null && _a !== void 0 ? _a : byid["Appendix"]) !== null && _b !== void 0 ? _b : byid["appendix"]) !== null && _c !== void 0 ? _c : byid["APPENDIX"];
     };
     const link = () => {
         const { anchors } = state;
@@ -56,6 +58,10 @@
         if (k) {
             return k;
         }
+        const a = appendix(anchors);
+        if (a) {
+            return a;
+        }
         return void 0;
     };
     const section = (anchors) => {
@@ -79,6 +85,14 @@
         });
         if (max !== -1) {
             return id;
+        }
+        return void 0;
+    };
+    const appendix = (anchors) => {
+        const { links: { appendix } } = state;
+        const anchor = trim(anchors.innerText);
+        if (anchor.startsWith("*") && appendix) {
+            return appendix.id;
         }
         return void 0;
     };

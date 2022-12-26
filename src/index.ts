@@ -10,6 +10,7 @@ type State = {
             keys: { [key in string]: number };
             heading: HTMLElement;
         }[];
+        appendix?: HTMLElement;
     };
 };
 
@@ -34,7 +35,7 @@ type State = {
             page,
             headings: headingss.map(ary).flat(),
             anchors: ary(anchorss),
-            links: { byid: {}, bykeys: [] },
+            links: { byid: {}, bykeys: [], },
         };
     };
 
@@ -50,6 +51,8 @@ type State = {
                 heading: x,
             })
         });
+
+        state.links.appendix = byid["付録"] ?? byid["Appendix"] ?? byid["appendix"] ?? byid["APPENDIX"];
     };
 
     const link = () => {
@@ -83,6 +86,11 @@ type State = {
             return k;
         }
 
+        const a = appendix(anchors);
+        if (a) {
+            return a;
+        }
+
         return void 0;
     };
 
@@ -110,6 +118,16 @@ type State = {
 
         if (max !== -1) {
             return id;
+        }
+        return void 0;
+    };
+
+    const appendix = (anchors: HTMLAnchorElement) => {
+        const { links: { appendix } } = state;
+
+        const anchor = trim(anchors.innerText);
+        if (anchor.startsWith("*") && appendix) {
+            return appendix.id;
         }
         return void 0;
     };
