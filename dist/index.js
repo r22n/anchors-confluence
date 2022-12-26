@@ -54,19 +54,20 @@
         if (byid[sec]) {
             return sec;
         }
-        const k = keys(anchors);
-        if (k) {
-            return k;
-        }
         const a = appendix(anchors);
         if (a) {
             return a;
+        }
+        const k = keys(anchors);
+        if (k) {
+            return k;
         }
         return void 0;
     };
     const section = (anchors) => {
         const h = anchors.parentElement.previousElementSibling;
         if (sections[h === null || h === void 0 ? void 0 : h.tagName]) {
+            h.id = "";
             return trim(h.innerText);
         }
         return void 0;
